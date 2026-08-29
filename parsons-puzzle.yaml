@@ -1,0 +1,93 @@
+$schema: https://learning-contents.org/schemas/parsons-puzzles/0.1.0
+license: MIT
+locale: en-US
+id: pp_bank_account
+source: main.c
+title: Bank Transaction Logic
+description: Arrange the functions to correctly handle account transactions.
+authors:
+  - first: Jone
+    last: Doe
+    email: jone.doe@example.com
+    affiliation: University of John Doe
+pedagogy:
+  activity: parsons-puzzles
+  difficulty: novice
+  prereq_topics: [structs, functions]
+  topics: [structs, functions, conditional logic]
+runtime:
+  language: c
+statement: |
+  Rearrange the blocks to correctly implement the deposit and withdrawal functions for the `BankAccount` struct. Make sure to:
+  1. Handle inputs safely
+  2. Validate account balances
+executions:
+  - title: Standard Transaction
+    stdout: |-
+      Deposited 100
+      Withdrew 50
+      Balance: 250
+    console: |-
+      Deposited 100
+      Withdrew 50
+      Balance: 250
+elements:
+  - type: block
+    location:
+      snippet: |2-
+        int deposit(BankAccount* account, int amount) {
+            if (amount > 0) {
+                account->balance = account->balance + amount;
+                printf("Deposited %d\n", amount);
+            }
+            return account->balance;
+        }
+    choices:
+      - snippet: |-
+            int deposit(BankAccount* account, int amount) {
+                if (amount > 0) {
+                    account->balance = account->balance + amount;
+                    printf("Deposited %d\n", amount);
+                }
+                return account->balance;
+            }
+        role: solution
+        explanations:
+          - body: |
+              Correctly adds the `amount` to `account->balance` if it is positive (`amount > 0`).
+  - type: block
+    location:
+      snippet: |2-
+        int withdraw(BankAccount* account, int amount) {
+            if (0 < amount && amount <= account->balance) {
+                account->balance = account->balance - amount;
+                printf("Withdrew %d\n", amount);
+            } else {
+                printf("Insufficient funds\n");
+            }
+            return account->balance;
+        }
+    choices:
+      - snippet: |-
+            int withdraw(BankAccount* account, int amount) {
+                if (0 < amount && amount <= account->balance) {
+                    account->balance = account->balance - amount;
+                    printf("Withdrew %d\n", amount);
+                } else {
+                    printf("Insufficient funds\n");
+                }
+                return account->balance;
+            }
+        role: solution
+        explanations:
+          - body: |
+              Correctly subtracts the `amount` if funds are sufficient (`amount <= account->balance`).
+      - snippet: |-
+            int withdraw(BankAccount* account, int amount) {
+                account->balance -= amount;
+                return account->balance;
+            }
+        role: distractor
+        explanations:
+          - body: |
+              This option is incorrect because it lacks the necessary funds check, which could lead to a **negative balance**! Always validate that `amount <= account->balance`.

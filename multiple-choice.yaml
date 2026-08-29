@@ -1,0 +1,77 @@
+$schema: https://learning-contents.org/schemas/multiple-choice-question/0.1.0
+license: MIT
+locale: en-US
+id: mcq_bank_account_deposit
+title: C Struct Deposit Function
+description: Choose the correct implementation of the deposit function in C.
+authors:
+  - first: Jone
+    last: Doe
+    email: jone.doe@example.com
+    affiliation: University of John Doe
+pedagogy:
+  activity: multiple-choice-question
+  difficulty: intermediate
+  prereq_topics:
+    - structs
+  topics:
+    - structs
+    - functions
+include_choices: 3
+question: |
+  Given the following C struct definition for `BankAccount`:
+  
+  ```c
+  typedef struct {
+      char owner[50];
+      int balance;
+  } BankAccount;
+  ```
+  
+  Which of the following represents the correct implementation for a `deposit` function in C that adds a positive `amount` to the account balance and returns the new balance?
+choices:
+  - body: |
+      ```c
+      int deposit(BankAccount* account, int amount) {
+          if (amount > 0) {
+              account->balance += amount;
+              return account->balance;
+          }
+          return account->balance;
+      }
+      ```
+    role: solution
+    include: always
+    order: 1
+    explanations:
+      - body: |
+          This is the correct implementation. It accesses the struct via pointer (`account->balance`), verifies that `amount > 0`, adds the amount to the balance, and returns the updated balance.
+  - body: |
+      ```c
+      int deposit(BankAccount account, int amount) {
+          if (amount > 0) {
+              account.balance += amount;
+              return account.balance;
+          }
+          return account.balance;
+      }
+      ```
+    role: distractor
+    explanations:
+      - body: |
+          Incorrect. In C, passing `BankAccount account` by value creates a local copy. Modifications to `account.balance` will not persist on the caller's original struct.
+  - body: |
+      ```c
+      int deposit(BankAccount* account, int amount) {
+          account->balance =+ amount;
+          return account->balance;
+      }
+      ```
+    role: distractor
+    explanations:
+      - body: |
+          Incorrect. The operator `=+` assigns positive `amount` (`account->balance = +amount`), which overwrites the balance rather than adding to it. The correct operator is `+=`.
+  - body: None
+    role: distractor
+    include: always
+    order: 2

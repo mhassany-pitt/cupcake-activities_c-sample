@@ -1,0 +1,61 @@
+$schema: https://learning-contents.org/schemas/worked-example/0.1.0
+source: main.c
+license: MIT
+locale: en-US
+id: we_bank_account
+title: Bank Account Management
+description: Learn how to use structs and functions to manage a bank account in C.
+authors:
+  - first: Jone
+    last: Doe
+    email: jone.doe@example.com
+    affiliation: University of John Doe
+pedagogy:
+  activity: worked-example
+  difficulty: novice
+  prereq_topics: []
+  topics:
+    - structs
+    - state
+runtime:
+  language: c
+statement: |
+  This worked example demonstrates how `BankAccount` state is managed in C using structs and functions. We'll examine:
+  1. Struct initializer (`init_account`)
+  2. Deposit function (`deposit`)
+  3. Withdrawal function (`withdraw`)
+executions:
+  - title: Bob's Account
+    stdin: []
+    stdout: |-
+      Deposited 100
+      Withdrew 50
+      Balance: 250
+    console: |-
+      Deposited 100
+      Withdrew 50
+      Balance: 250
+    status: pass
+elements:
+  - type: explanation
+    location:
+      snippet: "void init_account(BankAccount* account, const char* owner, int balance) {"
+    explanations:
+      - body: |
+          The initializer function sets up the account owner and starting balance in C:
+          ```c
+          void init_account(BankAccount* account, const char* owner, int balance) {
+              strncpy(account->owner, owner, sizeof(account->owner) - 1);
+              account->owner[sizeof(account->owner) - 1] = '\0';
+              account->balance = balance;
+          }
+          ```
+          It operates on the struct passed by pointer (`BankAccount* account`).
+      - body: |
+          ...
+  - type: explanation
+    location:
+      snippet: "if (0 < amount && amount <= account->balance) {"
+    explanations:
+      - body: |
+          This condition validates that the withdrawal transaction is correct: it checks if the `amount` is greater than `0` and is less than or equal to the current `account->balance`.

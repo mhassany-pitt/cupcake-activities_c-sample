@@ -97,28 +97,6 @@ elements:
         explanations:
           - body: |
               Correct! Validates that `amount > 0` before updating `account->balance`, prints confirmation, and returns the updated balance.
-      - snippet: |-
-          int deposit(BankAccount* account, int amount) {
-              account->balance = account->balance + amount;
-              printf("Deposited %d\n", amount);
-              return account->balance;
-          }
-        role: distractor
-        explanations:
-          - body: |
-              Incorrect. Omits the `if (amount > 0)` input validation guard, which allows negative or zero deposit amounts to erroneously corrupt account balances.
-      - snippet: |-
-          int deposit(BankAccount* account, int amount) {
-              if (amount > 0) {
-                  account->balance = account->balance - amount;
-                  printf("Deposited %d\n", amount);
-              }
-              return account->balance;
-          }
-        role: distractor
-        explanations:
-          - body: |
-              Incorrect. Uses subtraction (`-`) instead of addition (`+`), deducting money from the account balance during a deposit transaction.
   - type: block
     group: bank-functions
     location:
@@ -157,17 +135,3 @@ elements:
         explanations:
           - body: |
               Incorrect. Unconditionally deducts `amount` without verifying if `amount <= account->balance`, allowing the account balance to plunge into negative numbers.
-      - snippet: |-
-          int withdraw(BankAccount* account, int amount) {
-              if (0 < amount && amount > account->balance) {
-                  account->balance = account->balance - amount;
-                  printf("Withdrew %d\n", amount);
-              } else {
-                  printf("Insufficient funds\n");
-              }
-              return account->balance;
-          }
-        role: distractor
-        explanations:
-          - body: |
-              Incorrect. The comparison `amount > account->balance` inverts the logic: it only allows withdrawals when the amount exceeds the balance, guaranteeing an overdraft on every successful withdrawal!

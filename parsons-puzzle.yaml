@@ -3,8 +3,8 @@ license: MIT
 locale: en-US
 id: pp_bank_account
 source: main.c
-title: Bank Transaction Logic
-description: Arrange the functions to correctly handle account transactions.
+title: Bank Account Functions and Initialization in C
+description: Rearrange the C functions to properly manage BankAccount struct state and enforce transaction safety.
 authors:
   - first: Jone
     last: Doe
@@ -13,14 +13,24 @@ authors:
 pedagogy:
   activity: parsons-puzzles
   difficulty: novice
-  prereq_topics: [structs, functions]
-  topics: [structs, functions, conditional logic]
+  prereq_topics:
+    - basic-syntax
+    - structs
+    - pointers
+  topics:
+    - structs
+    - pointers
+    - functions
+    - conditional-logic
+    - memory-safety
 runtime:
   language: c
 statement: |
-  Rearrange the blocks to correctly implement the deposit and withdrawal functions for the `BankAccount` struct. Make sure to:
-  1. Handle inputs safely
-  2. Validate account balances
+  Rearrange the blocks to correctly implement the initialization, deposit, and withdrawal functions for the `BankAccount` struct in C.
+  Make sure to:
+  1. Initialize the struct fields safely via pointer dereferencing (`->`) and guarantee string null-termination.
+  2. Implement the `deposit` function with positive input validation.
+  3. Implement the `withdraw` function with strict overdraft protection and insufficient funds notification.
 executions:
   - title: Standard Transaction
     stdout: |-
@@ -31,10 +41,42 @@ executions:
       Deposited 100
       Withdrew 50
       Balance: 250
+    status: pass
 elements:
   - type: block
+    group: bank-functions
     location:
-      snippet: |2-
+      snippet: |-
+        void init_account(BankAccount* account, const char* owner, int balance) {
+            strncpy(account->owner, owner, sizeof(account->owner) - 1);
+            account->owner[sizeof(account->owner) - 1] = '\0';
+            account->balance = balance;
+        }
+    choices:
+      - snippet: |-
+            void init_account(BankAccount* account, const char* owner, int balance) {
+                strncpy(account->owner, owner, sizeof(account->owner) - 1);
+                account->owner[sizeof(account->owner) - 1] = '\0';
+                account->balance = balance;
+            }
+        role: solution
+        explanations:
+          - body: |
+              Correct! Safely copies the string into the struct's buffer with bounds protection, guarantees null-termination (`\0`), and sets the initial balance.
+      - snippet: |-
+            void init_account(BankAccount account, const char* owner, int balance) {
+                strncpy(account.owner, owner, sizeof(account.owner) - 1);
+                account.owner[sizeof(account.owner) - 1] = '\0';
+                account.balance = balance;
+            }
+        role: distractor
+        explanations:
+          - body: |
+              Incorrect. In C, passing `BankAccount account` by value receives a copy of the struct. Modifying `account.balance` modifies only the local stack copy, leaving the caller's struct uninitialized.
+  - type: block
+    group: bank-functions
+    location:
+      snippet: |-
         int deposit(BankAccount* account, int amount) {
             if (amount > 0) {
                 account->balance = account->balance + amount;
@@ -54,10 +96,33 @@ elements:
         role: solution
         explanations:
           - body: |
-              Correctly adds the `amount` to `account->balance` if it is positive (`amount > 0`).
+              Correct! Validates that `amount > 0` before updating `account->balance`, prints confirmation, and returns the updated balance.
+      - snippet: |-
+            int deposit(BankAccount* account, int amount) {
+                account->balance = account->balance + amount;
+                printf("Deposited %d\n", amount);
+                return account->balance;
+            }
+        role: distractor
+        explanations:
+          - body: |
+              Incorrect. Omits the `if (amount > 0)` input validation guard, which allows negative or zero deposit amounts to erroneously corrupt account balances.
+      - snippet: |-
+            int deposit(BankAccount* account, int amount) {
+                if (amount > 0) {
+                    account->balance = account->balance - amount;
+                    printf("Deposited %d\n", amount);
+                }
+                return account->balance;
+            }
+        role: distractor
+        explanations:
+          - body: |
+              Incorrect. Uses subtraction (`-`) instead of addition (`+`), deducting money from the account balance during a deposit transaction.
   - type: block
+    group: bank-functions
     location:
-      snippet: |2-
+      snippet: |-
         int withdraw(BankAccount* account, int amount) {
             if (0 < amount && amount <= account->balance) {
                 account->balance = account->balance - amount;
@@ -81,13 +146,28 @@ elements:
         role: solution
         explanations:
           - body: |
-              Correctly subtracts the `amount` if funds are sufficient (`amount <= account->balance`).
+              Correct! Verifies that `0 < amount && amount <= account->balance`, debits the account when funds are sufficient, prints an error message when funds are insufficient, and returns `account->balance`.
       - snippet: |-
             int withdraw(BankAccount* account, int amount) {
-                account->balance -= amount;
+                account->balance = account->balance - amount;
+                printf("Withdrew %d\n", amount);
                 return account->balance;
             }
         role: distractor
         explanations:
           - body: |
-              This option is incorrect because it lacks the necessary funds check, which could lead to a **negative balance**! Always validate that `amount <= account->balance`.
+              Incorrect. Unconditionally deducts `amount` without verifying if `amount <= account->balance`, allowing the account balance to plunge into negative numbers.
+      - snippet: |-
+            int withdraw(BankAccount* account, int amount) {
+                if (0 < amount && amount > account->balance) {
+                    account->balance = account->balance - amount;
+                    printf("Withdrew %d\n", amount);
+                } else {
+                    printf("Insufficient funds\n");
+                }
+                return account->balance;
+            }
+        role: distractor
+        explanations:
+          - body: |
+              Incorrect. The comparison `amount > account->balance` inverts the logic: it only allows withdrawals when the amount exceeds the balance, guaranteeing an overdraft on every successful withdrawal!

@@ -3,8 +3,8 @@ source: main.c
 license: MIT
 locale: en-US
 id: we_bank_account
-title: Bank Account Management
-description: Learn how to use structs and functions to manage a bank account in C.
+title: Bank Account Management in C
+description: Learn how to use C structs, pointers, memory initialization, and functions to manage state.
 authors:
   - first: Jone
     last: Doe
@@ -13,17 +13,24 @@ authors:
 pedagogy:
   activity: worked-example
   difficulty: novice
-  prereq_topics: []
+  prereq_topics:
+    - basic-syntax
+    - variables
   topics:
     - structs
+    - pointers
+    - functions
     - state
+    - conditional-logic
 runtime:
   language: c
 statement: |
-  This worked example demonstrates how `BankAccount` state is managed in C using structs and functions. We'll examine:
-  1. Struct initializer (`init_account`)
-  2. Deposit function (`deposit`)
-  3. Withdrawal function (`withdraw`)
+  This worked example demonstrates how `BankAccount` state and operations are modeled in procedural C using `struct` types and pointer-based functions. We'll examine:
+  1. The `BankAccount` typedef struct defining memory layout.
+  2. The `init_account` function safely initializing string and integer struct members via pointers.
+  3. The `deposit` function with positive input validation and pointer state mutation.
+  4. The `withdraw` function with compound guard logic protecting against overdrafts.
+  5. The `main` driver function demonstrating stack allocation, pass-by-pointer with the address-of operator (`&`), and state inspection.
 executions:
   - title: Bob's Account
     stdin: []
@@ -39,23 +46,89 @@ executions:
 elements:
   - type: explanation
     location:
-      snippet: "void init_account(BankAccount* account, const char* owner, int balance) {"
+      snippet: |-
+        typedef struct {
+            char owner[50];
+            int balance;
+        } BankAccount;
     explanations:
       - body: |
-          The initializer function sets up the account owner and starting balance in C:
-          ```c
-          void init_account(BankAccount* account, const char* owner, int balance) {
-              strncpy(account->owner, owner, sizeof(account->owner) - 1);
-              account->owner[sizeof(account->owner) - 1] = '\0';
-              account->balance = balance;
-          }
-          ```
-          It operates on the struct passed by pointer (`BankAccount* account`).
-      - body: |
-          ...
+          ### 1. Struct Definition and Type Alias
+          * `typedef struct { ... } BankAccount;`: In C, a `struct` groups contiguous memory fields under a single composite type.
+          * `char owner[50];`: Allocates a fixed-size buffer of 50 bytes for storing a null-terminated string.
+          * `int balance;`: Primitive 4-byte integer field storing the account balance.
+          * Using `typedef` allows referring to the type directly as `BankAccount` instead of `struct BankAccount`.
   - type: explanation
     location:
-      snippet: "if (0 < amount && amount <= account->balance) {"
+      snippet: |-
+        void init_account(BankAccount* account, const char* owner, int balance) {
+            strncpy(account->owner, owner, sizeof(account->owner) - 1);
+            account->owner[sizeof(account->owner) - 1] = '\0';
+            account->balance = balance;
+        }
     explanations:
       - body: |
-          This condition validates that the withdrawal transaction is correct: it checks if the `amount` is greater than `0` and is less than or equal to the current `account->balance`.
+          ### 2. Pointer Initialization (`init_account`)
+          * `BankAccount* account`: Accepts a pointer to a `BankAccount` so mutations apply directly to the caller's memory.
+          * The arrow operator (`account->owner`) dereferences the pointer and accesses the struct member (equivalent to `(*account).owner`).
+          * `strncpy(account->owner, owner, sizeof(account->owner) - 1);`: Safely copies up to 49 characters to prevent buffer overflow vulnerabilities.
+          * `account->owner[sizeof(account->owner) - 1] = '\0';`: Explicitly guarantees null-termination of the string.
+          * `account->balance = balance;`: Sets the initial account balance.
+  - type: explanation
+    location:
+      snippet: |-
+        int deposit(BankAccount* account, int amount) {
+            if (amount > 0) {
+                account->balance = account->balance + amount;
+                printf("Deposited %d\n", amount);
+            }
+            return account->balance;
+        }
+    explanations:
+      - body: |
+          ### 3. The `deposit` Function
+          * **Input Validation**: `if (amount > 0)` guards against zero or negative deposit amounts.
+          * **State Mutation**: `account->balance = account->balance + amount;` credits the balance via pointer dereferencing.
+          * **Formatted Output**: `printf("Deposited %d\n", amount);` prints formatted output with a newline.
+          * **Return Value**: `return account->balance;` returns the new balance integer to the caller.
+  - type: explanation
+    location:
+      snippet: |-
+        int withdraw(BankAccount* account, int amount) {
+            if (0 < amount && amount <= account->balance) {
+                account->balance = account->balance - amount;
+                printf("Withdrew %d\n", amount);
+            } else {
+                printf("Insufficient funds\n");
+            }
+            return account->balance;
+        }
+    explanations:
+      - body: |
+          ### 4. The `withdraw` Function and Overdraft Protection
+          * **Compound Guard Condition**: `if (0 < amount && amount <= account->balance)` checks two conditions with `&&`:
+            1. `0 < amount`: The withdrawal amount must be strictly positive.
+            2. `amount <= account->balance`: The withdrawal must not exceed available funds (allowing full withdrawals down to 0).
+          * **Successful Debit**: When valid, `account->balance = account->balance - amount;` debits the balance and prints confirmation.
+          * **Fallback Branch**: The `else` block catches overdraft attempts or invalid amounts by printing `"Insufficient funds\n"` without modifying `account->balance`.
+          * **Return Value**: Returns the current balance in all cases.
+  - type: explanation
+    location:
+      snippet: |-
+        int main(void) {
+            BankAccount account;
+            init_account(&account, "Bob", 200);
+            deposit(&account, 100);
+            withdraw(&account, 50);
+            printf("Balance: %d\n", account.balance);
+            return 0;
+        }
+    explanations:
+      - body: |
+          ### 5. Execution Flow in `main`
+          * `BankAccount account;`: Allocates a `BankAccount` struct on the stack frame.
+          * `init_account(&account, "Bob", 200);`: The address-of operator (`&`) passes the pointer address of `account` so `init_account` can initialize it.
+          * `deposit(&account, 100);`: Passes `&account` to deposit 100, increasing balance to 300 and printing `"Deposited 100"`.
+          * `withdraw(&account, 50);`: Passes `&account` to withdraw 50, decreasing balance to 250 and printing `"Withdrew 50"`.
+          * `printf("Balance: %d\n", account.balance);`: Directly accesses `account.balance` to print the final output (`"Balance: 250"`).
+          * `return 0;`: Standard successful process termination code in C.

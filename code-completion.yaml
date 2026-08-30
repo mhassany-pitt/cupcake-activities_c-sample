@@ -3,8 +3,8 @@ source: main.c
 license: MIT
 locale: en-US
 id: cc_bank_account
-title: Complete the BankAccount Logic
-description: Fill in the critical logic for account balance updates and validation.
+title: Complete the BankAccount C Implementation
+description: Fill in essential C keywords, operators, and function calls to declare structs, update pointer state, and validate transactions.
 authors:
   - first: Jone
     last: Doe
@@ -13,16 +13,24 @@ authors:
 pedagogy:
   activity: code-completion
   difficulty: novice
-  prereq_topics: []
+  prereq_topics:
+    - basic-syntax
+    - variables
   topics:
     - structs
+    - pointers
     - arithmetic
+    - relational-operators
+    - functions
 runtime:
   language: c
 statement: |
-  Complete the `BankAccount` functions by adding the missing updates and validation checks. Focus on:
-  - Updating `account->balance` during a deposit transaction
-  - Ensuring withdrawal amounts do not exceed the current balance
+  Complete the `BankAccount` struct and function implementations by selecting the correct keywords, operators, and function identifiers.
+  Make sure to:
+  1. Declare the composite data structure using the C `struct` keyword.
+  2. Correctly increment `account->balance` during a deposit.
+  3. Ensure that withdrawal requests do not exceed the available balance.
+  4. Invoke the proper transaction function in the `main` driver.
 executions:
   - title: Bob's Account
     stdin: []
@@ -39,6 +47,32 @@ executions:
 elements:
   - type: blank
     location:
+      context: "typedef struct {"
+      snippet: "struct"
+      nth: 1
+    choices:
+      - snippet: "struct"
+        role: solution
+        explanations:
+          - body: |
+              Correct! In C, the `struct` keyword is used to declare a user-defined composite data type grouping related fields.
+      - snippet: "class"
+        role: distractor
+        explanations:
+          - body: |
+              Incorrect. `class` is an object-oriented keyword in C++, Java, and TypeScript, but does not exist in standard C.
+      - snippet: "union"
+        role: distractor
+        explanations:
+          - body: |
+              Incorrect. In a C `union`, all members share the exact same memory location rather than having distinct contiguous storage for `owner` and `balance`.
+      - snippet: "enum"
+        role: distractor
+        explanations:
+          - body: |
+              Incorrect. `enum` in C defines an enumerated list of integer named constants, not a composite memory record.
+  - type: blank
+    location:
       context: "account->balance = account->balance + amount;"
       snippet: "+"
       nth: 1
@@ -47,12 +81,22 @@ elements:
         role: solution
         explanations:
           - body: |
-              Use the `+` operator to **increase** the current balance by the deposit amount.
+              Correct! The addition operator (`+`) adds the deposited `amount` to the current `account->balance`, crediting the account.
       - snippet: "-"
         role: distractor
         explanations:
           - body: |
-              This would use the `-` operator, which **decreases** the balance instead of adding to it.
+              Incorrect. The subtraction operator (`-`) would deduct money from the account during a deposit instead of crediting it.
+      - snippet: "*"
+        role: distractor
+        explanations:
+          - body: |
+              Incorrect. The multiplication operator (`*`) would multiply the existing balance by the deposit amount, yielding an incorrect total.
+      - snippet: "="
+        role: distractor
+        explanations:
+          - body: |
+              Incorrect. Using `=` causes a syntax error or overwrites the balance with `amount` rather than accumulating funds.
   - type: blank
     location:
       context: "if (0 < amount && amount <= account->balance) {"
@@ -63,9 +107,40 @@ elements:
         role: solution
         explanations:
           - body: |
-              You must check if the withdrawal amount is less than or equal (`<=`) to the current balance, ensuring the user has **sufficient funds**.
+              Correct! The less-than-or-equal operator (`<=`) ensures the user has sufficient funds, allowing withdrawals up to and including the exact total balance without overdrafting.
+      - snippet: "<"
+        role: distractor
+        explanations:
+          - body: |
+              Incorrect. The strictly-less-than operator (`<`) would prevent account holders from withdrawing their exact entire balance (withdrawing down to zero).
+      - snippet: ">="
+        role: distractor
+        explanations:
+          - body: |
+              Incorrect. Using `>=` would invert the business logic, permitting withdrawals only when the amount is greater than or equal to the balance, guaranteeing an overdraft.
       - snippet: ">"
         role: distractor
         explanations:
           - body: |
-              This would use the `>` operator, which checks if the withdrawal amount is strictly greater than the balance, allowing the user to withdraw more money than they have!
+              Incorrect. Using `>` would only permit transactions that exceed the current balance, causing an immediate overdraft into negative funds.
+  - type: blank
+    location:
+      context: "deposit(&account, 100);"
+      snippet: "deposit"
+      nth: 1
+    choices:
+      - snippet: "deposit"
+        role: solution
+        explanations:
+          - body: |
+              Correct! Invokes the `deposit` function with the pointer `&account` and argument `100` to credit the account.
+      - snippet: "withdraw"
+        role: distractor
+        explanations:
+          - body: |
+              Incorrect. Invoking `withdraw(&account, 100)` would debit the account instead of performing the required deposit transaction.
+      - snippet: "init_account"
+        role: distractor
+        explanations:
+          - body: |
+              Incorrect. `init_account` requires 3 arguments (`&account, owner, balance`) and initializes the account rather than crediting a deposit.

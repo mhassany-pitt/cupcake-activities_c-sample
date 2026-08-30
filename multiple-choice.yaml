@@ -2,8 +2,8 @@ $schema: https://learning-contents.org/schemas/multiple-choice-question/0.1.0
 license: MIT
 locale: en-US
 id: mcq_bank_account_deposit
-title: C Struct Deposit Function
-description: Choose the correct implementation of the deposit function in C.
+title: C Struct Deposit Function Implementation
+description: Choose the correct implementation of the deposit function operating on a BankAccount pointer in C.
 authors:
   - first: Jone
     last: Doe
@@ -13,13 +13,17 @@ pedagogy:
   activity: multiple-choice-question
   difficulty: intermediate
   prereq_topics:
+    - basic-syntax
     - structs
+    - pointers
   topics:
     - structs
+    - pointers
     - functions
-include_choices: 3
+    - memory-safety
+include_choices: 4
 question: |
-  Given the following C struct definition for `BankAccount`:
+  Given the following C struct definition:
   
   ```c
   typedef struct {
@@ -28,7 +32,7 @@ question: |
   } BankAccount;
   ```
   
-  Which of the following represents the correct implementation for a `deposit` function in C that adds a positive `amount` to the account balance and returns the new balance?
+  Which of the following represents the correct implementation for a `deposit` function in C that validates positive deposit amounts, modifies the original `BankAccount` struct, and returns the new balance?
 choices:
   - body: |
       ```c
@@ -45,7 +49,11 @@ choices:
     order: 1
     explanations:
       - body: |
-          This is the correct implementation. It accesses the struct via pointer (`account->balance`), verifies that `amount > 0`, adds the amount to the balance, and returns the updated balance.
+          Correct! This implementation:
+          1. Accepts a pointer (`BankAccount* account`) so mutations apply directly to the caller's struct.
+          2. Accesses and updates the member using the pointer arrow operator `account->balance += amount`.
+          3. Validates that `amount > 0`.
+          4. Returns the updated balance.
   - body: |
       ```c
       int deposit(BankAccount account, int amount) {
@@ -59,19 +67,32 @@ choices:
     role: distractor
     explanations:
       - body: |
-          Incorrect. In C, passing `BankAccount account` by value creates a local copy. Modifications to `account.balance` will not persist on the caller's original struct.
+          Incorrect. In C, parameters passed by value receive a stack copy of the struct. Modifying `account.balance` updates only the local copy, leaving the caller's original struct unmodified.
   - body: |
       ```c
       int deposit(BankAccount* account, int amount) {
-          account->balance =+ amount;
+          if (amount > 0) {
+              account->balance =+ amount;
+              return account->balance;
+          }
           return account->balance;
       }
       ```
     role: distractor
     explanations:
       - body: |
-          Incorrect. The operator `=+` assigns positive `amount` (`account->balance = +amount`), which overwrites the balance rather than adding to it. The correct operator is `+=`.
-  - body: None
+          Incorrect. The operator `=+` is a unary positive assignment (`account->balance = +amount`), which overwrites the balance with `amount` rather than accumulating funds with `+=`.
+  - body: |
+      ```c
+      int deposit(BankAccount* account, int amount) {
+          if (amount > 0) {
+              account.balance += amount;
+              return account.balance;
+          }
+          return account.balance;
+      }
+      ```
     role: distractor
-    include: always
-    order: 2
+    explanations:
+      - body: |
+          Incorrect. `account` is a pointer (`BankAccount*`), so members cannot be accessed using the dot (`.`) operator (`account.balance`). Doing so causes a C compilation error: `member reference type 'BankAccount *' is a pointer; did you mean to use '->'?`.

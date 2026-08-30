@@ -34,16 +34,25 @@ statement: |
 elements:
   - type: parameter
     location:
-      context: 'init_account(&account, "Bob", 200);'
-      snippet: "200"
-    values: [100, 200, 300]
+      context: init_account(&account, "Bob", 200);
+      snippet: '200'
+    values:
+      - 100
+      - 200
+      - 300
   - type: parameter
     location:
-      context: "deposit(&account, 100);"
-      snippet: "100"
-    values: [50, 100, 150]
+      context: deposit(&account, 100);
+      snippet: '100'
+    values:
+      - 50
+      - 100
+      - 150
   - type: parameter
     location:
-      context: "withdraw(&account, 50);"
-      snippet: "50"
-    values: [50, 200, 350]
+      context: withdraw(&account, 50);
+      snippet: '50'
+    values:
+      - 50
+      - 200
+      - 350

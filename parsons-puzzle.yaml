@@ -54,21 +54,21 @@ elements:
         }
     choices:
       - snippet: |-
-            void init_account(BankAccount* account, const char* owner, int balance) {
-                strncpy(account->owner, owner, sizeof(account->owner) - 1);
-                account->owner[sizeof(account->owner) - 1] = '\0';
-                account->balance = balance;
-            }
+          void init_account(BankAccount* account, const char* owner, int balance) {
+              strncpy(account->owner, owner, sizeof(account->owner) - 1);
+              account->owner[sizeof(account->owner) - 1] = '\0';
+              account->balance = balance;
+          }
         role: solution
         explanations:
           - body: |
               Correct! Safely copies the string into the struct's buffer with bounds protection, guarantees null-termination (`\0`), and sets the initial balance.
       - snippet: |-
-            void init_account(BankAccount account, const char* owner, int balance) {
-                strncpy(account.owner, owner, sizeof(account.owner) - 1);
-                account.owner[sizeof(account.owner) - 1] = '\0';
-                account.balance = balance;
-            }
+          void init_account(BankAccount account, const char* owner, int balance) {
+              strncpy(account.owner, owner, sizeof(account.owner) - 1);
+              account.owner[sizeof(account.owner) - 1] = '\0';
+              account.balance = balance;
+          }
         role: distractor
         explanations:
           - body: |
@@ -86,35 +86,35 @@ elements:
         }
     choices:
       - snippet: |-
-            int deposit(BankAccount* account, int amount) {
-                if (amount > 0) {
-                    account->balance = account->balance + amount;
-                    printf("Deposited %d\n", amount);
-                }
-                return account->balance;
-            }
+          int deposit(BankAccount* account, int amount) {
+              if (amount > 0) {
+                  account->balance = account->balance + amount;
+                  printf("Deposited %d\n", amount);
+              }
+              return account->balance;
+          }
         role: solution
         explanations:
           - body: |
               Correct! Validates that `amount > 0` before updating `account->balance`, prints confirmation, and returns the updated balance.
       - snippet: |-
-            int deposit(BankAccount* account, int amount) {
-                account->balance = account->balance + amount;
-                printf("Deposited %d\n", amount);
-                return account->balance;
-            }
+          int deposit(BankAccount* account, int amount) {
+              account->balance = account->balance + amount;
+              printf("Deposited %d\n", amount);
+              return account->balance;
+          }
         role: distractor
         explanations:
           - body: |
               Incorrect. Omits the `if (amount > 0)` input validation guard, which allows negative or zero deposit amounts to erroneously corrupt account balances.
       - snippet: |-
-            int deposit(BankAccount* account, int amount) {
-                if (amount > 0) {
-                    account->balance = account->balance - amount;
-                    printf("Deposited %d\n", amount);
-                }
-                return account->balance;
-            }
+          int deposit(BankAccount* account, int amount) {
+              if (amount > 0) {
+                  account->balance = account->balance - amount;
+                  printf("Deposited %d\n", amount);
+              }
+              return account->balance;
+          }
         role: distractor
         explanations:
           - body: |
@@ -134,39 +134,39 @@ elements:
         }
     choices:
       - snippet: |-
-            int withdraw(BankAccount* account, int amount) {
-                if (0 < amount && amount <= account->balance) {
-                    account->balance = account->balance - amount;
-                    printf("Withdrew %d\n", amount);
-                } else {
-                    printf("Insufficient funds\n");
-                }
-                return account->balance;
-            }
+          int withdraw(BankAccount* account, int amount) {
+              if (0 < amount && amount <= account->balance) {
+                  account->balance = account->balance - amount;
+                  printf("Withdrew %d\n", amount);
+              } else {
+                  printf("Insufficient funds\n");
+              }
+              return account->balance;
+          }
         role: solution
         explanations:
           - body: |
               Correct! Verifies that `0 < amount && amount <= account->balance`, debits the account when funds are sufficient, prints an error message when funds are insufficient, and returns `account->balance`.
       - snippet: |-
-            int withdraw(BankAccount* account, int amount) {
-                account->balance = account->balance - amount;
-                printf("Withdrew %d\n", amount);
-                return account->balance;
-            }
+          int withdraw(BankAccount* account, int amount) {
+              account->balance = account->balance - amount;
+              printf("Withdrew %d\n", amount);
+              return account->balance;
+          }
         role: distractor
         explanations:
           - body: |
               Incorrect. Unconditionally deducts `amount` without verifying if `amount <= account->balance`, allowing the account balance to plunge into negative numbers.
       - snippet: |-
-            int withdraw(BankAccount* account, int amount) {
-                if (0 < amount && amount > account->balance) {
-                    account->balance = account->balance - amount;
-                    printf("Withdrew %d\n", amount);
-                } else {
-                    printf("Insufficient funds\n");
-                }
-                return account->balance;
-            }
+          int withdraw(BankAccount* account, int amount) {
+              if (0 < amount && amount > account->balance) {
+                  account->balance = account->balance - amount;
+                  printf("Withdrew %d\n", amount);
+              } else {
+                  printf("Insufficient funds\n");
+              }
+              return account->balance;
+          }
         role: distractor
         explanations:
           - body: |

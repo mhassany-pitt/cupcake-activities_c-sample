@@ -1,29 +1,27 @@
----
-"$schema": https://learning-contents.org/schemas/free-coding/0.1.0
+$schema: https://learning-contents.org/schemas/free-coding/0.1.0
 source: main.c
 license: MIT
 locale: en-US
 id: free_coding_bank_account
 title: Bank Account Management in C
-description: Declare a BankAccount struct, initialize it, execute deposit and withdrawal
-  transactions, and inspect the resulting balance.
+description: Declare a BankAccount struct, initialize it, execute deposit and withdrawal transactions, and inspect the resulting balance.
 authors:
-- first: Jone
-  last: Doe
-  email: jone.doe@example.com
-  affiliation: University of John Doe
+  - first: Jone
+    last: Doe
+    email: jone.doe@example.com
+    affiliation: University of John Doe
 pedagogy:
   activity: free-coding
   difficulty: novice
   prereq_topics:
-  - basic-syntax
-  - structs
-  - pointers
+    - basic-syntax
+    - structs
+    - pointers
   topics:
-  - structs
-  - pointers
-  - functions
-  - state
+    - structs
+    - pointers
+    - functions
+    - state
 runtime:
   language: c
 statement: |
@@ -34,80 +32,80 @@ statement: |
   4. Call `withdraw` passing `&account` and an amount of `50`.
   5. Print the final balance to standard output in the format: `Balance: <balance>\n`.
 executions:
-- title: Standard Transaction Sequence
-  stdin: []
-  stdout: |-
-    Deposited 100
-    Withdrew 50
-    Balance: 250
-  console: |-
-    Deposited 100
-    Withdrew 50
-    Balance: 250
-  status: pass
+  - title: Standard Transaction Sequence
+    stdin: []
+    stdout: |-
+      Deposited 100
+      Withdrew 50
+      Balance: 250
+    console: |-
+      Deposited 100
+      Withdrew 50
+      Balance: 250
+    status: pass
 elements:
-- type: locked
-  location:
-    snippet: |-
-      #include <stdio.h>
-      #include <string.h>
+  - type: locked
+    location:
+      snippet: |-
+        #include <stdio.h>
+        #include <string.h>
 
-      typedef struct {
-          char owner[50];
-          int balance;
-      } BankAccount;
+        typedef struct {
+            char owner[50];
+            int balance;
+        } BankAccount;
 
-      void init_account(BankAccount* account, const char* owner, int balance) {
-          strncpy(account->owner, owner, sizeof(account->owner) - 1);
-          account->owner[sizeof(account->owner) - 1] = '\0';
-          account->balance = balance;
-      }
+        void init_account(BankAccount* account, const char* owner, int balance) {
+            strncpy(account->owner, owner, sizeof(account->owner) - 1);
+            account->owner[sizeof(account->owner) - 1] = '\0';
+            account->balance = balance;
+        }
 
-      int deposit(BankAccount* account, int amount) {
-          if (amount > 0) {
-              account->balance = account->balance + amount;
-              printf("Deposited %d\n", amount);
-          }
-          return account->balance;
-      }
+        int deposit(BankAccount* account, int amount) {
+            if (amount > 0) {
+                account->balance = account->balance + amount;
+                printf("Deposited %d\n", amount);
+            }
+            return account->balance;
+        }
 
-      int withdraw(BankAccount* account, int amount) {
-          if (0 < amount && amount <= account->balance) {
-              account->balance = account->balance - amount;
-              printf("Withdrew %d\n", amount);
-          } else {
-              printf("Insufficient funds\n");
-          }
-          return account->balance;
-      }
-- type: editable
-  location:
-    snippet: |2-
-          BankAccount account;
-          init_account(&account, "Bob", 200);
-          deposit(&account, 100);
-          withdraw(&account, 50);
-          printf("Balance: %d\n", account.balance);
-  placeholder: |-
-    // 1. Declare a BankAccount variable named `account`
+        int withdraw(BankAccount* account, int amount) {
+            if (0 < amount && amount <= account->balance) {
+                account->balance = account->balance - amount;
+                printf("Withdrew %d\n", amount);
+            } else {
+                printf("Insufficient funds\n");
+            }
+            return account->balance;
+        }
+  - type: editable
+    location:
+      snippet: |2-
+            BankAccount account;
+            init_account(&account, "Bob", 200);
+            deposit(&account, 100);
+            withdraw(&account, 50);
+            printf("Balance: %d\n", account.balance);
+    placeholder: |-
+      // 1. Declare a BankAccount variable named `account`
 
-        // 2. Initialize it for "Bob" with 200 initial balance
+          // 2. Initialize it for "Bob" with 200 initial balance
 
-        // 3. Deposit 100
+          // 3. Deposit 100
 
-        // 4. Withdraw 50
+          // 4. Withdraw 50
 
-        // 5. Print formatted balance
+          // 5. Print formatted balance
 testcases:
-- title: Standard Account Workflow
-  visible: true
-  stdin: []
-  stdout: |-
-    Deposited 100
-    Withdrew 50
-    Balance: 250
-  console: |-
-    Deposited 100
-    Withdrew 50
-    Balance: 250
-  status: pass
+  - title: Standard Account Workflow
+    visible: true
+    stdin: []
+    stdout: |-
+      Deposited 100
+      Withdrew 50
+      Balance: 250
+    console: |-
+      Deposited 100
+      Withdrew 50
+      Balance: 250
+    status: pass

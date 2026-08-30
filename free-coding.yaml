@@ -88,14 +88,10 @@ elements:
             printf("Balance: %d\n", account.balance);
     placeholder: |-
       // 1. Declare a BankAccount variable named `account`
-
-          // 2. Initialize it for "Bob" with 200 initial balance
-
-          // 3. Deposit 100
-
-          // 4. Withdraw 50
-
-          // 5. Print formatted balance
+      // 2. Initialize it for "Bob" with 200 initial balance
+      // 3. Deposit 100
+      // 4. Withdraw 50
+      // 5. Print formatted balance
 testcases:
   - title: Standard Account Workflow
     visible: true

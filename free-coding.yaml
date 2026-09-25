@@ -32,6 +32,9 @@ statement: |
   3. Call `deposit` passing `&account` and an amount of `100`.
   4. Call `withdraw` passing `&account` and an amount of `50`.
   5. Print the final balance to standard output in the format: `Balance: <balance>\n`.
+hints:
+  - "Review the problem statement and ensure the steps are executed in order."
+  - "Verify that initial values, deposits, withdrawals, and prints match the specification."
 elements:
   - type: locked
     location:
@@ -94,13 +97,8 @@ testcases:
       Withdrew 50
       Balance: 250
     status: pass
-    hints:
-      - "Review the problem statement and ensure the steps are executed in order."
-      - "Verify that initial values, deposits, withdrawals, and prints match the specification."
     feedback:
-      - on_pass:
-          - explanations:
-              - "Great job! Your solution executed properly and matched all expected outputs."
-        on_fail:
-          - explanations:
-              - "Your code produced differing output. Double-check your method calls and printed formatting."
+      on_pass:
+        - "Great job! Your solution executed properly and matched all expected outputs."
+      on_fail:
+        - "Your code produced differing output. Double-check your method calls and printed formatting."

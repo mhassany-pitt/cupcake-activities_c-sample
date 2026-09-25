@@ -24,6 +24,7 @@ pedagogy:
     - state
 runtime:
   language: c
+  version: 11
 statement: |
   In the `main` function, write the C code to interact with the `BankAccount` struct:
   1. Declare a stack variable `account` of type `BankAccount`.
@@ -31,18 +32,6 @@ statement: |
   3. Call `deposit` passing `&account` and an amount of `100`.
   4. Call `withdraw` passing `&account` and an amount of `50`.
   5. Print the final balance to standard output in the format: `Balance: <balance>\n`.
-executions:
-  - title: Standard Transaction Sequence
-    stdin: []
-    stdout: |-
-      Deposited 100
-      Withdrew 50
-      Balance: 250
-    console: |-
-      Deposited 100
-      Withdrew 50
-      Balance: 250
-    status: pass
 elements:
   - type: locked
     location:
@@ -105,3 +94,13 @@ testcases:
       Withdrew 50
       Balance: 250
     status: pass
+    hints:
+      - "Review the problem statement and ensure the steps are executed in order."
+      - "Verify that initial values, deposits, withdrawals, and prints match the specification."
+    feedback:
+      - on_pass:
+          - explanations:
+              - "Great job! Your solution executed properly and matched all expected outputs."
+        on_fail:
+          - explanations:
+              - "Your code produced differing output. Double-check your method calls and printed formatting."
